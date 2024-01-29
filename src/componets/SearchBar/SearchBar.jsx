@@ -12,17 +12,12 @@ const SearchBarSchema = Yup.object().shape({
     .required('Required!'),
 });
 
-export const SearchBar = () => {
-  const handleSubmit = (values, actions) => {
-    console.log(values);
-    actions.resetForm();
-  };
-
+export const SearchBar = ({ onSubmit }) => {
   return (
     <header className={css.header}>
       <Formik
         initialValues={{ query: '' }}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         validationSchema={SearchBarSchema}
       >
         <Form className={css.form}>
