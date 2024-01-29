@@ -1,5 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { IoIosSearch } from 'react-icons/io';
+import { IconContext } from 'react-icons';
 import * as Yup from 'yup';
+
+import css from './SearchBar.module.css';
 
 const SearchBarSchema = Yup.object().shape({
   query: Yup.string()
@@ -15,23 +19,32 @@ export const SearchBar = () => {
   };
 
   return (
-    <header>
+    <header className={css.header}>
       <Formik
         initialValues={{ query: '' }}
         onSubmit={handleSubmit}
         validationSchema={SearchBarSchema}
       >
-        <Form>
-          <div>
+        <Form className={css.form}>
+          <div className={css.searchBox}>
             <Field
+              className={css.input}
               type="text"
               name="query"
               autoComplete="off"
               autoFocus
               placeholder="Search images and photos"
             />
-            <button type="submit">Search</button>
-            <ErrorMessage name="query" as="span" />
+            <button className={css.btn} type="submit">
+              <IconContext.Provider value={{ size: '1.3em' }}>
+                <IoIosSearch />
+              </IconContext.Provider>
+            </button>
+            <ErrorMessage
+              className={css.invalidMsg}
+              name="query"
+              component="span"
+            />
           </div>
         </Form>
       </Formik>
