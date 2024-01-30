@@ -20,3 +20,11 @@
     min-width: 1168px;
   }
 }
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-content: center;
+  height: 80vh;
+}
