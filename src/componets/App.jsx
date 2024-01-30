@@ -3,6 +3,7 @@ import { useToggle } from '../js/helpers/useToggle';
 import { Oval } from 'react-loader-spinner';
 import Modal from 'react-modal';
 
+import { SearchForm } from './SearchForm/SearchForm';
 import { SearchBar } from './SearchBar/SearchBar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { ErrorMessage } from './ErrorMessage/ErrorMessage';
@@ -49,10 +50,10 @@ export const App = () => {
     fetchImage();
   }, [currentQuery, page]);
 
-  const handleSubmit = ({ query }, actions) => {
-    setCurrentQuery(query);
-    actions.resetForm();
-  };
+  // const handleSubmit = ({ query }, actions) => {
+  //   setCurrentQuery(query);
+  //   actions.resetForm();
+  // };
 
   const handleClick = () => {
     setPage(page + 1);
@@ -68,7 +69,11 @@ export const App = () => {
       >
         <button onClick={close}>CLose</button>
       </Modal>
-      <SearchBar onSubmit={handleSubmit} />
+
+      <SearchBar onSearch={setCurrentQuery} />
+
+      {/* <SearchForm onSubmit={handleSubmit} /> */}
+
       {loader && (
         <Oval
           visible={true}
