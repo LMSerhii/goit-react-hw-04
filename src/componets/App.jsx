@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useToggle } from '../js/helpers/useToggle';
 import { Oval } from 'react-loader-spinner';
 import Modal from 'react-modal';
 
@@ -27,7 +28,7 @@ export const App = () => {
   const [currentQuery, setCurrentQuery] = useState('');
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, open, close } = useToggle(false);
 
   useEffect(() => {
     if (!currentQuery) return;
@@ -57,28 +58,15 @@ export const App = () => {
     setPage(page + 1);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <div className="container">
       <Modal
-        isOpen={isModalOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
+        isOpen={isOpen}
+        onRequestClose={close}
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <button onClick={closeModal}>CLose</button>
+        <button onClick={close}>CLose</button>
       </Modal>
       <SearchBar onSubmit={handleSubmit} />
       {loader && (
@@ -94,7 +82,7 @@ export const App = () => {
       )}
       {error && <ErrorMessage />}
       {currentList.length > 0 && (
-        <ImageGallery imageList={currentList} onClick={openModal} />
+        <ImageGallery imageList={currentList} onClick={open} />
       )}
       {currentList.length > 0 && <LoadMoreBtn onClick={handleClick} />}
     </div>
