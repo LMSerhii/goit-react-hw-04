@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useToggle } from '../js/helpers/useToggle';
 import { Oval } from 'react-loader-spinner';
 import Modal from 'react-modal';
+import { toast, Toaster } from 'react-hot-toast';
 
-import { SearchForm } from './SearchForm/SearchForm';
 import { SearchBar } from './SearchBar/SearchBar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { ErrorMessage } from './ErrorMessage/ErrorMessage';
@@ -23,24 +23,36 @@ const customStyles = {
   },
 };
 
+Modal.setAppElement('#root');
+
 export const App = () => {
-  const [currentList, setCurrentList] = useState([]);
+  const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [currentQuery, setCurrentQuery] = useState('');
+  const [currentList, setCurrentList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const { isOpen, open, close } = useToggle(false);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    if (!currentQuery) return;
+    if (!query) return;
 
     const fetchImage = async () => {
       try {
-        setCurrentList([]);
         setError(false);
         setLoader(true);
-        const response = await getDataGallery(currentQuery, page);
-        setCurrentList(response.results);
+
+        const response = await getDataGallery(query, page);
+
+        if (!response.results.length)
+          toast('Nothing was found', {
+            icon: '☠️',
+            style: { borderRadius: '10px', background: '#333', color: '#fff' },
+          });
+
+        if (totalPages >= response.total_pages) return;
+
+        setCurrentList(prevList => [...prevList, ...response.results]);
       } catch (error) {
         setError(true);
       } finally {
@@ -48,12 +60,13 @@ export const App = () => {
       }
     };
     fetchImage();
-  }, [currentQuery, page]);
+  }, [query, page]);
 
-  // const handleSubmit = ({ query }, actions) => {
-  //   setCurrentQuery(query);
-  //   actions.resetForm();
-  // };
+  const searchImages = currentQuery => {
+    setQuery(currentQuery);
+    setPage(1);
+    setCurrentList([]);
+  };
 
   const handleClick = () => {
     setPage(page + 1);
@@ -70,10 +83,12 @@ export const App = () => {
         <button onClick={close}>CLose</button>
       </Modal>
 
-      <SearchBar onSearch={setCurrentQuery} />
+      <SearchBar onSearch={searchImages} />
 
-      {/* <SearchForm onSubmit={handleSubmit} /> */}
-
+      {error && <ErrorMessage />}
+      {currentList.length > 0 && (
+        <ImageGallery imageList={currentList} onClick={open} />
+      )}
       {loader && (
         <Oval
           visible={true}
@@ -85,11 +100,10 @@ export const App = () => {
           wrapperClass="loader"
         />
       )}
-      {error && <ErrorMessage />}
-      {currentList.length > 0 && (
-        <ImageGallery imageList={currentList} onClick={open} />
+      {currentList.length > 0 && !loader && (
+        <LoadMoreBtn onClick={handleClick} />
       )}
-      {currentList.length > 0 && <LoadMoreBtn onClick={handleClick} />}
+      <Toaster />
     </div>
   );
 };

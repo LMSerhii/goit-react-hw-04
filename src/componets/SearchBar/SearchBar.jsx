@@ -1,9 +1,18 @@
+import toast from 'react-hot-toast';
+
+// const notify = () => toast('Here is your toast.');
+
 export const SearchBar = ({ onSearch }) => {
   const handleSubmit = evt => {
     evt.preventDefault();
-    const form = evt.target;
-    onSearch(form.elements.search.value);
-    form.reset();
+
+    if (evt.target.elements.search.value.trim() === '') {
+      toast.error('Search is empty.');
+      return;
+    }
+
+    onSearch(evt.target.elements.search.value);
+    evt.target.reset();
   };
 
   return (
