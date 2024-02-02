@@ -3,6 +3,7 @@ import { useToggle } from '../js/helpers/useToggle';
 import { Oval } from 'react-loader-spinner';
 import Modal from 'react-modal';
 import { toast, Toaster } from 'react-hot-toast';
+import { IoMdClose } from 'react-icons/io';
 
 import { SearchBar } from './SearchBar/SearchBar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -31,8 +32,9 @@ export const App = () => {
   const [currentList, setCurrentList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
-  const { isOpen, open, close } = useToggle(false);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState();
+
+  const { description, selectedPhoto, isOpen, open, close } = useToggle(false);
 
   useEffect(() => {
     if (!query) return;
@@ -49,8 +51,7 @@ export const App = () => {
             icon: '☠️',
             style: { borderRadius: '10px', background: '#333', color: '#fff' },
           });
-
-        if (totalPages >= response.total_pages) return;
+        setTotalPages(response.total_pages);
 
         setCurrentList(prevList => [...prevList, ...response.results]);
       } catch (error) {
@@ -74,21 +75,14 @@ export const App = () => {
 
   return (
     <div className="container">
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={close}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <button onClick={close}>CLose</button>
-      </Modal>
-
       <SearchBar onSearch={searchImages} />
 
       {error && <ErrorMessage />}
+
       {currentList.length > 0 && (
-        <ImageGallery imageList={currentList} onClick={open} />
+        <ImageGallery imageList={currentList} onModal={open} />
       )}
+
       {loader && (
         <Oval
           visible={true}
@@ -100,10 +94,24 @@ export const App = () => {
           wrapperClass="loader"
         />
       )}
-      {currentList.length > 0 && !loader && (
+
+      {currentList.length > 0 && !loader && page < totalPages && (
         <LoadMoreBtn onClick={handleClick} />
       )}
+
       <Toaster />
+
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={close}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <button onClick={close}>
+          <IoMdClose />
+        </button>
+        <img src={selectedPhoto} alt={description} />
+      </Modal>
     </div>
   );
 };
