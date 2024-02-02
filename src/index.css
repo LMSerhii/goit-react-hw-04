@@ -6,6 +6,7 @@
 body {
   font-family: var(--font-family);
   color: var(--text-color);
+  background-color: #272727;
 }
 
 h1,
