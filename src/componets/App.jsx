@@ -25,6 +25,7 @@ const customStyles = {
 };
 
 Modal.setAppElement('#root');
+Modal.defaultStyles.overlay.backgroundColor = '#2727273b';
 
 export const App = () => {
   const [query, setQuery] = useState('');
@@ -34,7 +35,7 @@ export const App = () => {
   const [error, setError] = useState(false);
   const [totalPages, setTotalPages] = useState();
 
-  const { description, selectedPhoto, isOpen, open, close } = useToggle(false);
+  const { imageParams, isOpen, open, close } = useToggle(false);
 
   useEffect(() => {
     if (!query) return;
@@ -107,11 +108,7 @@ export const App = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <ModalContent
-          selectedPhoto={selectedPhoto}
-          description={description}
-          closeModal={close}
-        />
+        <ModalContent imageParams={imageParams} closeModal={close} />
       </Modal>
     </div>
   );

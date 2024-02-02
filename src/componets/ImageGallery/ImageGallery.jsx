@@ -8,6 +8,7 @@ export const ImageGallery = ({ imageList, onModal }) => {
         ({
           id,
           alt_description,
+          description,
           likes,
           urls: { small, regular },
           user: { name },
@@ -18,6 +19,7 @@ export const ImageGallery = ({ imageList, onModal }) => {
                 small={small}
                 regular={regular}
                 alt_description={alt_description}
+                description={description}
                 onModal={onModal}
               />
               <div className={css.shortDesc}>
