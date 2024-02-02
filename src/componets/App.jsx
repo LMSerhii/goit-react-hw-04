@@ -3,12 +3,12 @@ import { useToggle } from '../js/helpers/useToggle';
 import { Oval } from 'react-loader-spinner';
 import Modal from 'react-modal';
 import { toast, Toaster } from 'react-hot-toast';
-import { IoMdClose } from 'react-icons/io';
 
 import { SearchBar } from './SearchBar/SearchBar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { ErrorMessage } from './ErrorMessage/ErrorMessage';
 import { LoadMoreBtn } from './LoadMoreBtn/LoadMoreBtn';
+import { ModalContent } from './ModalContent/ModalContent';
 
 import './App.css';
 import { getDataGallery } from '../js/helpers/api-service';
@@ -107,10 +107,11 @@ export const App = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <button onClick={close}>
-          <IoMdClose />
-        </button>
-        <img src={selectedPhoto} alt={description} />
+        <ModalContent
+          selectedPhoto={selectedPhoto}
+          description={description}
+          closeModal={close}
+        />
       </Modal>
     </div>
   );
