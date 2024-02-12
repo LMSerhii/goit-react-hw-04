@@ -30,6 +30,7 @@ Modal.defaultStyles.overlay.backgroundColor = '#2727273b';
 export const App = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+
   const [currentList, setCurrentList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -61,6 +62,7 @@ export const App = () => {
         setLoader(false);
       }
     };
+
     fetchImage();
   }, [query, page]);
 
